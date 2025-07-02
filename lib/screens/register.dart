@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:users/global/global.dart';
+import 'package:users/screens/main_page.dart';
 
 
 
@@ -33,6 +34,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       ).then((auth) async {
+
+        
         currentUser = auth.user;
         if (currentUser != null) {
           Map userMap = {
@@ -48,7 +51,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
       }
 
       await Fluttertoast.showToast(msg: "Registration Successful");
+      Navigator.push(context, MaterialPageRoute(
+        builder: (c) => MainScreen()));
+      }).catchError((errormassege){
+          Fluttertoast.showToast(msg: "Error: " + errormassege.toString());
       });
+    }
+
+    else {
+      Fluttertoast.showToast(msg: "Please fill all fields correctly");
     }
   }
   
