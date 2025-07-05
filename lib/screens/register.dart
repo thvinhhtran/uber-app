@@ -10,8 +10,7 @@ import 'package:users/screens/main_page.dart';
 
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
-
+  const RegisterScreen({Key? key}) : super(key: key);
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
 }

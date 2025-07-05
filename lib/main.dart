@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:users/screens/login.dart';
 import 'package:users/screens/register.dart';
 import 'package:users/themeprovider/theme_provider.dart';
 import 'screens/main_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-
-
-
-void main() {
+Future <void> main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       theme: Mythemes.lightTheme,
       darkTheme: Mythemes.darkTheme,
       debugShowCheckedModeBanner: false,
-      home: const RegisterScreen(),
+      home:  LoginScreen(),
     );
   }
 }

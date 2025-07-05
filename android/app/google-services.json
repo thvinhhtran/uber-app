@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "62880664729",
+    "project_id": "uber-verttran",
+    "storage_bucket": "uber-verttran.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:62880664729:android:5422e96e06ed354e0abc08",
+        "android_client_info": {
+          "package_name": "com.example.users"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApt70hRNVYq326uQCUnz6HaPmEQEqK7X4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
