@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:users/Splashscreens/splashscreen.dart';
+import 'package:users/screens/forgot_password.dart';
 import 'package:users/screens/login.dart';
 import 'package:users/screens/register.dart';
 import 'package:users/themeprovider/theme_provider.dart';
@@ -22,7 +24,7 @@ class MyApp extends StatelessWidget {
       theme: Mythemes.lightTheme,
       darkTheme: Mythemes.darkTheme,
       debugShowCheckedModeBanner: false,
-      home:  LoginScreen(),
+      home:  ForgotPasswordScreen(),
     );
   }
 }

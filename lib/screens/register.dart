@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:users/global/global.dart';
+import 'package:users/screens/forgot_password.dart';
+import 'package:users/screens/login.dart';
 import 'package:users/screens/main_page.dart';
 
 
@@ -407,7 +409,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         SizedBox(height: 20),
 
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                             Navigator.push(context, MaterialPageRoute(
+        builder: (c) => ForgotPasswordScreen()));
+                          },
                           child : Text(
                             'Forgot Password?',
                             style: TextStyle(
@@ -429,7 +434,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                             SizedBox(width: 5),
                             GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                 Navigator.push(context, MaterialPageRoute(
+        builder: (c) => LoginScreen()));
+                              },
                               child: Text(
                                 "Sign In",
                                 style:TextStyle(
