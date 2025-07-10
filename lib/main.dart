@@ -4,7 +4,7 @@ import 'package:users/screens/forgot_password.dart';
 import 'package:users/screens/login.dart';
 import 'package:users/screens/register.dart';
 import 'package:users/themeprovider/theme_provider.dart';
-import 'screens/main_page.dart';
+import 'screens/main_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 Future <void> main() async{
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       theme: Mythemes.lightTheme,
       darkTheme: Mythemes.darkTheme,
       debugShowCheckedModeBanner: false,
-      home:  ForgotPasswordScreen(),
+      home:  MainScreen(),
     );
   }
 }

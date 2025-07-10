@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:users/global/global.dart';
 import 'package:users/screens/forgot_password.dart';
-import 'package:users/screens/main_page.dart';
+import 'package:users/screens/main_screen.dart';
 import 'package:users/screens/register.dart';
 
 class LoginScreen extends StatefulWidget {

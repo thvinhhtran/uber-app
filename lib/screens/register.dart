@@ -7,7 +7,7 @@ import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:users/global/global.dart';
 import 'package:users/screens/forgot_password.dart';
 import 'package:users/screens/login.dart';
-import 'package:users/screens/main_page.dart';
+import 'package:users/screens/main_screen.dart';
 
 
 
