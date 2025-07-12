@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:provider/provider.dart';
 import 'package:users/Splashscreens/splashscreen.dart';
+import 'package:users/infohandle/app_info.dart';
 import 'package:users/screens/forgot_password.dart';
 import 'package:users/screens/login.dart';
 import 'package:users/screens/register.dart';
@@ -10,7 +13,7 @@ import 'package:firebase_core/firebase_core.dart';
 Future <void> main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp())); // Sửa dòng này
 }
 
 class MyApp extends StatelessWidget {
@@ -24,7 +27,7 @@ class MyApp extends StatelessWidget {
       theme: Mythemes.lightTheme,
       darkTheme: Mythemes.darkTheme,
       debugShowCheckedModeBanner: false,
-      home:  MainScreen(),
+      home: Splashscreen(),
     );
   }
 }

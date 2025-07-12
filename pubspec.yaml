@@ -52,6 +52,8 @@ dependencies:
   location: ^8.0.1
   smooth_star_rating_nsafe: ^1.0.0+1
   animated_text_kit: ^4.2.3
+  provider: ^6.1.5
+  flutter_riverpod: ^2.5.1
 
 
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Mythemes {
-  static final darkTheme =ThemeData(
+  static final darkTheme = ThemeData(
     scaffoldBackgroundColor: Colors.grey.shade900,
     colorScheme: ColorScheme.dark(),
   );

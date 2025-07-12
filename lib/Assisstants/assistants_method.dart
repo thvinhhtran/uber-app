@@ -1,8 +1,10 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:users/Assisstants/request_assistants.dart';
 import 'package:users/global/global.dart';
 import 'package:users/global/map_key.dart';
+import 'package:users/infohandle/app_info.dart';
 import 'package:users/models/direction.dart';
 import 'package:users/models/user_model.dart';
 
@@ -23,7 +25,7 @@ class AssistantsMethod {
 
   static Future<String> searchAddressForGeographicCoordinates(
     Position position,
-    context,
+    WidgetRef ref, // Sử dụng ref thay vì context
   ) async {
     String apiUrl =
         "https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=$mapKey";
@@ -32,20 +34,17 @@ class AssistantsMethod {
     var requestResponse = await RequestAssistants.receiveRequest(apiUrl);
 
     if(requestResponse != "Error Occurred, Failed. No Response.") {
-       humanReadableAddress = requestResponse["results"][0]["formatted_address"];
+      humanReadableAddress = requestResponse["results"][0]["formatted_address"];
 
-       Direction userPickUpAddress = Direction();
-       userPickUpAddress.locationLatitude = position.latitude;
-       userPickUpAddress.locationLongitude = position.longitude;
-       userPickUpAddress.locationName = humanReadableAddress;
+      Direction userPickUpAddress = Direction();
+      userPickUpAddress.locationLatitude = position.latitude;
+      userPickUpAddress.locationLongitude = position.longitude;
+      userPickUpAddress.locationName = humanReadableAddress;
 
-       
-
-
-
+      ref.read(appInfoProvider.notifier)
+          .updatePickUpLocationAddress(userPickUpAddress);
     }
 
     return humanReadableAddress;
-
   }
 }
