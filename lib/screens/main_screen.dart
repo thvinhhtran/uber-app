@@ -12,6 +12,7 @@ import 'package:users/global/global.dart';
 import 'package:users/global/map_key.dart';
 import 'package:users/infohandle/app_info.dart';
 import 'package:users/models/direction.dart';
+import 'package:users/screens/search_places.dart';
 import 'package:users/themeprovider/theme_provider.dart';
 
 class MainScreen extends ConsumerStatefulWidget {
@@ -31,7 +32,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
   GoogleMapController? newGoogleMapController;
 
   static const CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
+    target: LatLng(10.7769, 106.7009), // Hồ Chí Minh
     zoom: 14.4746,
   );
 
@@ -259,8 +260,18 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                                 Padding(
                                   padding: EdgeInsets.all(5),
                                   child: GestureDetector(
-                                    onTap: () {
-
+                                    onTap: () async {
+                                      //search for places
+                                      var responsefromSearchScreen = await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              SearchPlaceScreen(),
+                                        ),
+                                      );
+                                      if (responsefromSearchScreen == "obtainDirection") {
+                                        setState(() {}); // Thêm dòng này để rebuild lại UI và lấy dữ liệu mới từ provider
+                                      }
                                     },
                                     child: Row(
                                         children: [
@@ -287,8 +298,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                                           ),
                                           Text(
                                             appInfo.userDropOffLocation != null
-                                                ? (appInfo.userDropOffLocation!.locationName ?? "")
-                                                      .substring(0, 24) + "..."
+                                                ? appInfo.userDropOffLocation!.locationName!
                                                 : "Where to?",
                                                 style: TextStyle(
                                                   color:Colors.grey,

@@ -6,6 +6,7 @@ import 'package:users/infohandle/app_info.dart';
 import 'package:users/screens/forgot_password.dart';
 import 'package:users/screens/login.dart';
 import 'package:users/screens/register.dart';
+import 'package:users/screens/search_places.dart';
 import 'package:users/themeprovider/theme_provider.dart';
 import 'screens/main_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
