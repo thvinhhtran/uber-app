@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geocoder2/geocoder2.dart';
 import 'package:geolocator/geolocator.dart';
@@ -8,6 +9,7 @@ import 'package:location/location.dart' as loc;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:users/Assisstants/assistants_method.dart';
+import 'package:users/Widgets/progress_dialog.dart';
 import 'package:users/global/global.dart';
 import 'package:users/global/map_key.dart';
 import 'package:users/infohandle/app_info.dart';
@@ -89,6 +91,126 @@ class _MainScreenState extends ConsumerState<MainScreen> {
 
     // AssistantsMethod.readTripKeysForOnlineUser(context);
   }
+
+  Future<void> drawPolylineFromOriginToDestination( bool darkTheme) async {
+    var originPosition = ref.read(appInfoProvider).userPickUpLocation;
+    var destinationPosition = ref.read(appInfoProvider).userDropOffLocation;
+
+    var originLatLng = LatLng(originPosition!.locationLatitude!,
+        originPosition.locationLongitude!);
+    var destinationLatLng = LatLng(destinationPosition!.locationLatitude!,
+        destinationPosition.locationLongitude!);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => ProgressDialog(message: "Please wait...",)
+    );
+
+    var directionDetailsInfo = await AssistantsMethod.obtainOriginToDestinationDirectionDetails(originLatLng, destinationLatLng);
+
+    Navigator.pop(context);
+
+    // Sửa tại đây: kiểm tra null trước
+    if (directionDetailsInfo == null ||
+        directionDetailsInfo.e_points == null ||
+        directionDetailsInfo.e_points!.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Không tìm thấy tuyến đường phù hợp!")),
+      );
+      return;
+    }
+
+    setState(() {
+      tripDirectionDetailsInfo = directionDetailsInfo;
+    });
+
+    PolylinePoints pPoints = PolylinePoints();
+    List<PointLatLng> decodePolylinePointsResultList = pPoints.decodePolyline(directionDetailsInfo.e_points!);
+
+    pLineCoordinatedList.clear();
+    if (decodePolylinePointsResultList.isNotEmpty) {
+      decodePolylinePointsResultList.forEach((PointLatLng pointLatLng) {
+        pLineCoordinatedList.add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
+      });
+  }
+  polyLineSet.clear();
+
+  setState(() {
+    Polyline polyline = Polyline(
+      color: darkTheme ? Colors.amberAccent : Colors.blue,
+      polylineId: PolylineId("PolylineID"),
+      jointType: JointType.round,
+      points: pLineCoordinatedList,
+      startCap: Cap.roundCap,
+      endCap: Cap.roundCap,
+      geodesic: true, 
+      width: 4,
+    );
+
+    polyLineSet.add(polyline);
+  });
+
+  LatLngBounds boundsLatLng;
+  if(originLatLng.latitude > destinationLatLng.latitude &&
+      originLatLng.longitude > destinationLatLng.longitude) {
+    boundsLatLng = LatLngBounds(
+      southwest: destinationLatLng,
+      northeast: originLatLng,
+    );
+  } else if(originLatLng.longitude > destinationLatLng.longitude) {
+    boundsLatLng = LatLngBounds(
+      southwest: LatLng(destinationLatLng.latitude, originLatLng.longitude),
+      northeast: LatLng(originLatLng.latitude, destinationLatLng.longitude),
+    );
+  } else if(originLatLng.latitude > destinationLatLng.latitude) {
+    boundsLatLng = LatLngBounds(
+      southwest: LatLng(originLatLng.latitude, destinationLatLng.longitude),
+      northeast: LatLng(destinationLatLng.latitude, originLatLng.longitude),
+    );
+  } else {
+    boundsLatLng = LatLngBounds(
+      southwest: originLatLng,
+      northeast: destinationLatLng,
+    );
+  }
+  newGoogleMapController!.animateCamera(
+    CameraUpdate.newLatLngBounds(boundsLatLng, 70),
+  );
+
+  Marker originMarker = Marker(
+    markerId: MarkerId("originId"),
+    infoWindow: InfoWindow(title: originPosition.locationName,snippet: "Origin"),
+    position: originLatLng,
+    icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+  );
+
+  Marker destinationMarker = Marker(
+    markerId: MarkerId("destinationId"),
+    infoWindow: InfoWindow(title: destinationPosition.locationName,snippet: "Destination"),
+    position: destinationLatLng,
+    icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+  );
+
+  setState(() {
+    makersSet.add(originMarker);
+    makersSet.add(destinationMarker);
+  });
+
+  Circle originCircle = Circle(
+    circleId: CircleId("originId"),
+    fillColor: Colors.green,
+    center: originLatLng,
+    radius: 12,
+    strokeWidth: 3,
+    strokeColor: Colors.white,
+  );
+
+
+
+}
+
+
+
 
   getAddressFromLatLng() async {
     try {
@@ -270,8 +392,12 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                                         ),
                                       );
                                       if (responsefromSearchScreen == "obtainDirection") {
-                                        setState(() {}); // Thêm dòng này để rebuild lại UI và lấy dữ liệu mới từ provider
+                                        setState(() {
+                                          openNavigationDrawer = false;
+                                        }); 
                                       }
+
+                                      await drawPolylineFromOriginToDestination(darkTheme);
                                     },
                                     child: Row(
                                         children: [

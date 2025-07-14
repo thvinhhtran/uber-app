@@ -54,6 +54,7 @@ dependencies:
   animated_text_kit: ^4.2.3
   provider: ^6.1.5
   flutter_riverpod: ^2.5.1
+ 
 
 
 
