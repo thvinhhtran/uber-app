@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:users/models/direction.dart';
+import 'package:users/models/user_model.dart';
 
 class AppInfo extends Notifier<AppInfo> {
   Direction? userPickUpLocation, userDropOffLocation;
@@ -24,3 +25,5 @@ class AppInfo extends Notifier<AppInfo> {
 
 // Tạo provider cho AppInfo
 final appInfoProvider = NotifierProvider<AppInfo, AppInfo>(() => AppInfo());
+
+final userProvider = StateProvider<UserModel?>((ref) => null);

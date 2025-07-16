@@ -31,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
       ).then((auth) async {
         currentUser = auth.user;
 
-      await Fluttertoast.showToast(msg: "Loggin Successful");
+      await Fluttertoast.showToast(msg: "Login Successful");
       Navigator.push(context, MaterialPageRoute(
         builder: (c) => MainScreen()));
       }).catchError((errormassege){

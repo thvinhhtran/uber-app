@@ -1,33 +1,36 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:users/Assisstants/assistants_method.dart';
 import 'package:users/global/global.dart';
 import 'package:users/screens/login.dart';
 import 'package:users/screens/main_screen.dart';
+import 'package:users/infohandle/app_info.dart'; // import provider
 
-class Splashscreen extends StatefulWidget {
+class Splashscreen extends ConsumerStatefulWidget {
   const Splashscreen({super.key});
 
   @override
-  State<Splashscreen> createState() => _SplashscreenState();
+  ConsumerState<Splashscreen> createState() => _SplashscreenState();
 }
 
-class _SplashscreenState extends State<Splashscreen> {
+class _SplashscreenState extends ConsumerState<Splashscreen> {
 
   startTimer() {
     Timer(Duration(seconds: 3), () async  {
-      if (await firebaseAuth.currentUser != null) {
-        firebaseAuth.currentUser!= null ? AssistantsMethod.readCurrentOnlineUserInfo() :null;
-        Navigator.push(context, MaterialPageRoute(builder: (c) => MainScreen()));
-
+      if (firebaseAuth.currentUser != null) {
+        // Lấy thông tin user và cập nhật vào provider
+        final userInfo = await AssistantsMethod.readCurrentOnlineUserInfo();
+        ref.read(userProvider.notifier).state = userInfo;
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => MainScreen()));
       }
       else {
-        Navigator.push(context, MaterialPageRoute(builder: (c) => LoginScreen()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => LoginScreen()));
       }
     });
   }
 
+  @override
   void initState() {
     super.initState();
     startTimer();
@@ -42,10 +45,9 @@ class _SplashscreenState extends State<Splashscreen> {
           style: TextStyle(
             fontSize: 40,
             fontWeight: FontWeight.bold,
-
-          ),
           ),
         ),
+      ),
     );
   }
 }

@@ -14,6 +14,8 @@ import 'package:users/global/global.dart';
 import 'package:users/global/map_key.dart';
 import 'package:users/infohandle/app_info.dart';
 import 'package:users/models/direction.dart';
+import 'package:users/screens/drawer_screen.dart';
+import 'package:users/screens/precise_pickuplocation.dart';
 import 'package:users/screens/search_places.dart';
 import 'package:users/themeprovider/theme_provider.dart';
 
@@ -205,6 +207,20 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     strokeColor: Colors.white,
   );
 
+  Circle destinationCircle = Circle(
+    circleId: CircleId("destinationId"),
+    fillColor: Colors.red,
+    center: destinationLatLng,
+    radius: 12,
+    strokeWidth: 3,
+    strokeColor: Colors.white,
+  );
+
+  setState(() {
+    circlesSet.add(originCircle);
+    circlesSet.add(destinationCircle);
+  });
+
 
 
 }
@@ -212,25 +228,25 @@ class _MainScreenState extends ConsumerState<MainScreen> {
 
 
 
-  getAddressFromLatLng() async {
-    try {
-      GeoData data = await Geocoder2.getDataFromCoordinates(
-        latitude: pickLocation!.latitude,
-        longitude: pickLocation!.longitude,
-        googleMapApiKey: mapKey,
-      );
-      setState(() {
-        Direction userPickUpAddress = Direction();
-        userPickUpAddress.locationLatitude = pickLocation!.latitude;
-        userPickUpAddress.locationLongitude = pickLocation!.longitude;
-        userPickUpAddress.locationName = data.address;
-        ref.read(appInfoProvider.notifier)
-            .updatePickUpLocationAddress(userPickUpAddress); // dùng Riverpod
-      });
-    } catch (e) {
-      print(e);
-    }
-  }
+  // getAddressFromLatLng() async {
+  //   try {
+  //     GeoData data = await Geocoder2.getDataFromCoordinates(
+  //       latitude: pickLocation!.latitude,
+  //       longitude: pickLocation!.longitude,
+  //       googleMapApiKey: mapKey,
+  //     );
+  //     setState(() {
+  //       Direction userPickUpAddress = Direction();
+  //       userPickUpAddress.locationLatitude = pickLocation!.latitude;
+  //       userPickUpAddress.locationLongitude = pickLocation!.longitude;
+  //       userPickUpAddress.locationName = data.address;
+  //       ref.read(appInfoProvider.notifier)
+  //           .updatePickUpLocationAddress(userPickUpAddress); // dùng Riverpod
+  //     });
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
 
   checkIfLocationPermissionAllowed() async {
     _locationPermission = await Geolocator.checkPermission();
@@ -261,8 +277,11 @@ class _MainScreenState extends ConsumerState<MainScreen> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
+        key: _scaffoldState,
+        drawer: DrawerScreen(),
         body: Stack(
           children: [
+
             GoogleMap(
               mapType: MapType.normal,
               myLocationEnabled: true,
@@ -277,26 +296,47 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                 newGoogleMapController = controller;
                 setState(() {});
               },
-              onCameraMove: (CameraPosition position) {
-                if (pickLocation != position!.target) {
-                  setState(() {
-                    pickLocation = position.target;
-                  });
-                }
-              },
-              onCameraIdle: () {
-                getAddressFromLatLng();
-              },
+              // onCameraMove: (CameraPosition position) {
+              //   if (pickLocation != position!.target) {
+              //     setState(() {
+              //       pickLocation = position.target;
+              //     });
+              //   }
+              // },
+              // onCameraIdle: () {
+              //   getAddressFromLatLng();
+              // },
             ),
-            Align(
-              alignment: Alignment.center,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 35.0),
-                child: Image.asset(
-                  "images/assets/picks.png",
-                  height: 45,
-                  width: 45,
-                ),
+            // Align(
+            //   alignment: Alignment.center,
+            //   child: Padding(
+            //     padding: const EdgeInsets.only(bottom: 35.0),
+            //     child: Image.asset(
+            //       "images/assets/picks.png",
+            //       height: 45,
+            //       width: 45,
+            //     ),
+            //   ),
+            // ),
+
+
+            //custom hamburger button for drawer
+            Positioned(
+              top: 50,
+              left: 20,
+              child: Container(
+                child: GestureDetector(
+                    onTap: (){
+                      _scaffoldState.currentState!.openDrawer();
+                    },
+                      child: CircleAvatar(
+                        backgroundColor: darkTheme ? Colors.amber.shade400 : Colors.white,
+                        child: Icon(
+                          Icons.menu,
+                          color: darkTheme ? Colors.black : Colors.lightBlue,
+                        ),
+                      ),
+                )
               ),
             ),
 
@@ -444,6 +484,61 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                         ],
                       ),
                     ),
+
+                    SizedBox(height: 5),
+                    Row(
+                       mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: (){
+                            Navigator.push(
+                              context,MaterialPageRoute(
+                                builder: (context) => PrecisePickupScreen(),
+                              ),
+                            );
+                          },
+
+                          child: Text(
+                            "Change pick up",
+                            style: TextStyle(
+                              color: darkTheme ? Colors.black : Colors.white,
+
+                            ),
+                          ),
+
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: darkTheme ? Colors.amber.shade400 : Colors.blue,
+                           textStyle: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(width: 10),
+                        ElevatedButton(
+                          onPressed: (){
+
+                          },
+
+                          child: Text(
+                            "Reques a ride",
+                            style: TextStyle(
+                              color: darkTheme ? Colors.black : Colors.white,
+
+                            ),
+                          ),
+
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: darkTheme ? Colors.amber.shade400 : Colors.blue,
+                           textStyle: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -466,6 +561,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
             //   )
             // )
           ],
+        
         ),
       ),
     );
