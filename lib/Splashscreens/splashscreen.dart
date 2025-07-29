@@ -41,7 +41,7 @@ class _SplashscreenState extends ConsumerState<Splashscreen> {
     return Scaffold(
       body: Center(
         child: Text(
-          'Ubers',
+          'Grab',
           style: TextStyle(
             fontSize: 40,
             fontWeight: FontWeight.bold,

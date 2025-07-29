@@ -1,15 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:provider/provider.dart';
 import 'package:users/Splashscreens/splashscreen.dart';
-import 'package:users/infohandle/app_info.dart';
-import 'package:users/screens/forgot_password.dart';
-import 'package:users/screens/login.dart';
-import 'package:users/screens/precise_pickuplocation.dart';
-import 'package:users/screens/register.dart';
-import 'package:users/screens/search_places.dart';
 import 'package:users/themeprovider/theme_provider.dart';
-import 'screens/main_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 Future <void> main() async{
